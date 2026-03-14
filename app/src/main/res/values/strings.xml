@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MexMp3</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Welcome to MexMp3</string>
+    <string name="onboarding_subtitle">Your premium offline music experience</string>
+    <string name="onboarding_feature_1">Beautiful player with stunning visualizer</string>
+    <string name="onboarding_feature_2">Gapless playback &amp; equalizer</string>
+    <string name="onboarding_feature_3">Sleep timer, playlists &amp; more</string>
+    <string name="onboarding_scan_btn">Scan Music Library</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_get_started">Get Started</string>
+
+    <!-- Bottom Nav -->
+    <string name="nav_songs">Songs</string>
+    <string name="nav_albums">Albums</string>
+    <string name="nav_artists">Artists</string>
+    <string name="nav_playlists">Playlists</string>
+    <string name="nav_folders">Folders</string>
+    <string name="nav_recent">Recent</string>
+
+    <!-- Player -->
+    <string name="player_now_playing">Now Playing</string>
+    <string name="player_unknown_song">Unknown Song</string>
+    <string name="player_unknown_artist">Unknown Artist</string>
+    <string name="player_unknown_album">Unknown Album</string>
+    <string name="player_lyrics_placeholder">No lyrics available.\n\nPlace a .lrc file with the same name as your audio file in the same folder.</string>
+    <string name="player_swipe_hint">Swipe left/right to skip tracks</string>
+
+    <!-- Controls -->
+    <string name="ctrl_play">Play</string>
+    <string name="ctrl_pause">Pause</string>
+    <string name="ctrl_next">Next</string>
+    <string name="ctrl_previous">Previous</string>
+    <string name="ctrl_shuffle">Shuffle</string>
+    <string name="ctrl_repeat">Repeat</string>
+    <string name="ctrl_repeat_one">Repeat One</string>
+    <string name="ctrl_repeat_all">Repeat All</string>
+
+    <!-- Search -->
+    <string name="search_hint">Search songs, artists, albums…</string>
+    <string name="search_no_results">No results for \"</string>
+    <string name="search_no_results_end">\"</string>
+    <string name="search_results">Results</string>
+
+    <!-- Permissions -->
+    <string name="perm_audio_title">Music Access Needed</string>
+    <string name="perm_audio_message">MexMp3 needs access to your audio files to build your music library.</string>
+    <string name="perm_notification_title">Enable Notifications</string>
+    <string name="perm_notification_message">Allow notifications to see playback controls on your lock screen and status bar.</string>
+    <string name="perm_grant">Grant Permission</string>
+    <string name="perm_deny">Not Now</string>
+    <string name="perm_open_settings">Open Settings</string>
+    <string name="perm_denied_permanently">Permission permanently denied. Please enable it in Settings.</string>
+
+    <!-- Library -->
+    <string name="library_scanning">Scanning music library…</string>
+    <string name="library_empty_title">No Music Found</string>
+    <string name="library_empty_msg">Add audio files to your device and scan your library.</string>
+    <string name="library_scan">Scan Library</string>
+    <string name="library_songs_count">%d songs</string>
+    <string name="library_albums">Albums</string>
+    <string name="library_artists">Artists</string>
+    <string name="library_folders">Folders</string>
+    <string name="library_recent">Recently Played</string>
+
+    <!-- Playlists -->
+    <string name="playlist_new">New Playlist</string>
+    <string name="playlist_name_hint">Playlist name</string>
+    <string name="playlist_create">Create</string>
+    <string name="playlist_delete">Delete Playlist</string>
+    <string name="playlist_delete_confirm">Delete \"%s\"? This cannot be undone.</string>
+    <string name="playlist_add_songs">Add Songs</string>
+    <string name="playlist_remove_song">Remove from Playlist</string>
+    <string name="playlist_empty">This playlist is empty.\nAdd songs to get started.</string>
+    <string name="playlist_songs_count" formatted="false">%d songs • %s</string>
+
+    <!-- Queue -->
+    <string name="queue_title">Up Next</string>
+    <string name="queue_clear">Clear Queue</string>
+    <string name="queue_add">Add to Queue</string>
+    <string name="queue_play_next">Play Next</string>
+
+    <!-- Equalizer -->
+    <string name="eq_title">Equalizer</string>
+    <string name="eq_preset_flat">Flat</string>
+    <string name="eq_preset_bass">Bass Boost</string>
+    <string name="eq_preset_rock">Rock</string>
+    <string name="eq_preset_jazz">Jazz</string>
+    <string name="eq_preset_pop">Pop</string>
+    <string name="eq_preset_custom">Custom</string>
+    <string name="eq_enabled">Equalizer Enabled</string>
+
+    <!-- Sleep Timer -->
+    <string name="sleep_timer_title">Sleep Timer</string>
+    <string name="sleep_timer_off">Off</string>
+    <string name="sleep_timer_5">5 minutes</string>
+    <string name="sleep_timer_10">10 minutes</string>
+    <string name="sleep_timer_15">15 minutes</string>
+    <string name="sleep_timer_30">30 minutes</string>
+    <string name="sleep_timer_45">45 minutes</string>
+    <string name="sleep_timer_60">1 hour</string>
+    <string name="sleep_timer_active">Stops in %s</string>
+    <string name="sleep_timer_set">Set Timer</string>
+    <string name="sleep_timer_cancel">Cancel Timer</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_theme">App Theme</string>
+    <string name="settings_theme_military">Military Dark</string>
+    <string name="settings_theme_black">Pure Black Minimal</string>
+    <string name="settings_theme_forest">Deep Forest</string>
+    <string name="settings_theme_orange">Orange Night</string>
+    <string name="settings_theme_mono">Monochrome Elite</string>
+    <string name="settings_equalizer">Equalizer</string>
+    <string name="settings_sleep_timer">Sleep Timer</string>
+    <string name="settings_gapless">Gapless Playback</string>
+    <string name="settings_crossfade">Crossfade Duration</string>
+    <string name="settings_about">About MexMp3</string>
+    <string name="settings_version">Version %s</string>
+    <string name="settings_rescan">Rescan Library</string>
+
+    <!-- Metadata Editor -->
+    <string name="meta_editor_title">Edit Song Info</string>
+    <string name="meta_title_hint">Song Title</string>
+    <string name="meta_artist_hint">Artist</string>
+    <string name="meta_album_hint">Album</string>
+    <string name="meta_save">Save Changes</string>
+    <string name="meta_cancel">Cancel</string>
+    <string name="meta_saved">Changes saved</string>
+
+    <!-- Song options -->
+    <string name="song_options_play">Play</string>
+    <string name="song_options_play_next">Play Next</string>
+    <string name="song_options_add_queue">Add to Queue</string>
+    <string name="song_options_add_playlist">Add to Playlist</string>
+    <string name="song_options_edit">Edit Info</string>
+    <string name="song_options_share">Share</string>
+    <string name="song_options_delete">Delete</string>
+
+    <!-- Notification -->
+    <string name="notif_channel_name">Music Playback</string>
+    <string name="notif_channel_desc">Controls for MexMp3 music playback</string>
+    <string name="notif_action_play">Play</string>
+    <string name="notif_action_pause">Pause</string>
+    <string name="notif_action_next">Next</string>
+    <string name="notif_action_prev">Previous</string>
+    <string name="notif_action_close">Close</string>
+
+    <!-- Error states -->
+    <string name="error_generic">Something went wrong</string>
+    <string name="error_retry">Retry</string>
+    <string name="error_playback">Unable to play this track</string>
+    <string name="error_file_not_found">File not found</string>
+
+    <!-- Time -->
+    <string name="time_format_ms" formatted="false">%d:%02d</string>
+
+    <!-- Detail screens -->
+    <string name="detail_play_all">Play All</string>
+    <string name="detail_songs_count">%d songs</string>
+    <string name="detail_remove_from_playlist">Remove from Playlist</string>
+    <string name="detail_playlist_empty_hint">Long-press any song and choose Add to Playlist</string>
+
+    <!-- Queue feedback -->
+    <string name="queue_play_next_added">Playing next</string>
+    <string name="queue_added">Added to queue</string>
+
+    <!-- Metadata write -->
+    <string name="meta_saved_ok">Song info updated</string>
+    <string name="meta_save_failed">Could not save — check storage permission</string>
+
+    <!-- Lyrics -->
+    <string name="lyrics_synced_badge">SYNCED</string>
+    <string name="lyrics_loading">Finding lyrics…</string>
+    <string name="lyrics_not_found">No lyrics found for this track.\n\nYou can add a .lrc file with the same name as your audio file in the same folder.</string>
+
+    <!-- Misc -->
+    <string name="loading">Loading…</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="songs">Songs</string>
+    <string name="unknown">Unknown</string>
+    <string name="all_songs">All Songs</string>
+    <string name="mini_player_content_desc" formatted="false">Mini Player - %s by %s</string>
+</resources>

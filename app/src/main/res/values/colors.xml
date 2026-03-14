@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand colors -->
+    <color name="military_green">#4B5320</color>
+    <color name="military_green_light">#6B7540</color>
+    <color name="military_green_dark">#2B3300</color>
+    <color name="dark_orange">#CC5500</color>
+    <color name="dark_orange_light">#FF7722</color>
+    <color name="dark_orange_dark">#993300</color>
+    <color name="pure_black">#000000</color>
+    <color name="surface_dark">#121212</color>
+    <color name="surface_medium">#1E1E1E</color>
+    <color name="surface_light">#2A2A2A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+    <color name="white_40">#66FFFFFF</color>
+
+    <!-- Theme: Deep Forest -->
+    <color name="forest_primary">#1B5E20</color>
+    <color name="forest_secondary">#FF6F00</color>
+    <color name="forest_bg">#050F05</color>
+
+    <!-- Theme: Orange Night -->
+    <color name="orange_primary">#E65100</color>
+    <color name="orange_secondary">#FFD600</color>
+    <color name="orange_bg">#0A0500</color>
+
+    <!-- Theme: Monochrome -->
+    <color name="mono_primary">#BDBDBD</color>
+    <color name="mono_secondary">#757575</color>
+    <color name="mono_bg">#000000</color>
+</resources>
