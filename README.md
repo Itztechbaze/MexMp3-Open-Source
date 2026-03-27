@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.0.6-blue"/>
+  <img src="https://img.shields.io/badge/version-2.1.11-blue"/>
 </p>
 
 ---
@@ -35,8 +35,7 @@
 12. [Equalizer & Audio Effects](#equalizer--audio-effects)
 13. [Lyrics System](#lyrics-system)
 14. [Permissions](#permissions)
-15. [Known Limitations / TODOs](#known-limitations--todos)
-16. [Changelog](#changelog)
+15. [Changelog](#changelog)
 
 ---
 
@@ -47,37 +46,39 @@
 | MediaStore auto-scan (audio files) | ✅ |
 | Auto-scan on launch when permission already granted | ✅ |
 | Gapless ExoPlayer playback | ✅ |
-| **Spinning vinyl disk animation (playing/paused with exact angle hold)** | ✅ |
-| Animated waveform visualiser | ✅ |
+| Spinning vinyl disk animation (playing/paused with exact angle hold) | ✅ |
+| Animated 32-bar waveform visualiser | ✅ |
 | Swipe left/right on player to skip | ✅ |
-| **Synced + plain LRC lyrics (local file + LRCLib API)** | ✅ |
-| **Lyrics full-screen mode with song title & artist on top** | ✅ |
-| **Expanded lyrics panel (wider display, more lines visible)** | ✅ |
+| Synced + plain LRC lyrics (local file + LRCLib API) | ✅ |
+| Lyrics full-screen mode with song title & artist on top | ✅ |
 | Persistent foreground service | ✅ |
 | Lock-screen + notification controls (MediaStyle) | ✅ |
 | Notification tap → opens Now Playing screen directly | ✅ |
 | MediaSession (Bluetooth / headset buttons) | ✅ |
 | Audio focus handling + ducking | ✅ |
 | BecomingNoisy receiver (headset unplug) | ✅ |
-| **Premium Poweramp-style 5-band Equalizer** | ✅ |
+| **Poweramp-style 5-band Equalizer — complete rebuild** | ✅ |
+| **Per-band color coding (5 unique colors per band)** | ✅ |
+| **Multi-color animated spectrum curve with gradient fill** | ✅ |
+| **Arc/knob quick-adjust dials (Bass, Low Mid, Treble)** | ✅ |
+| **Pill-shaped band thumbs with glow shadow** | ✅ |
+| **Power toggle button with pulse glow** | ✅ |
 | **10 EQ presets + fully functional Custom mode** | ✅ |
 | Sleep timer | ✅ |
-| **Shuffle (true random, no repeat; restores sequential order when turned off)** | ✅ |
+| Shuffle (true random; restores sequential order when turned off) | ✅ |
 | Repeat (none / all / one) | ✅ |
-| **Song list sort: Title A–Z / Recently Added / Most Played** | ✅ |
+| Song list sort: Title A–Z / Recently Added / Most Played | ✅ |
 | **12 bespoke ultra-sleek app themes** | ✅ |
 | Visual swatch grid theme picker | ✅ |
 | Playlist CRUD (Room DB) | ✅ |
 | Songs / Albums / Artists / Playlists / Folders / Recent screens | ✅ |
-| **Recent screen shows recently played songs (DB history)** | ✅ |
+| Recent screen shows recently played songs (DB history) | ✅ |
 | Global search (title, artist, album) | ✅ |
 | Mini-player (always visible above bottom nav) | ✅ |
 | Full Now Playing screen | ✅ |
-| **Song long-press options: Play Next / Add to Queue / Add to Playlist / Edit Info / Delete** | ✅ |
+| Song long-press options: Play Next / Add to Queue / Add to Playlist / Edit Info / Delete | ✅ |
 | Metadata editor sheet | ✅ |
-| **Delete song from device (with confirmation dialog)** | ✅ |
-| **Larger song cards (bigger art thumbnail, taller rows)** | ✅ |
-| **Removed excess black margin above song list** | ✅ |
+| Delete song from device (with confirmation dialog) | ✅ |
 | Runtime permission dialogs (rationale) | ✅ |
 | Animated onboarding with real app logo | ✅ |
 | Splash screen (AndroidX SplashScreen API) | ✅ |
@@ -89,6 +90,10 @@
 | Edge-to-edge display with correct inset handling | ✅ |
 | Audio quality badge (bitrate / format pill) | ✅ |
 | Bluetooth connected device indicator on Now Playing | ✅ |
+| Dynamic colour theming from album art | ✅ |
+| Crossfade (0–12 seconds configurable) | ✅ |
+| Home screen widget (prev / play-pause / next) | ✅ |
+| Folder blacklist (exclude folders from library) | ✅ |
 
 ---
 
@@ -111,7 +116,7 @@ Service         MusicService (foreground, ExoPlayer)
 - **MusicService** holds ExoPlayer state as `MutableStateFlow` in its `companion object` — the ViewModel observes it without holding a direct cross-lifecycle reference
 - **Pending-action queue** drains once the service binds, eliminating fragile `delay()` hacks
 - **Room** for playlists and recent-play history
-- **DataStore** for all preferences (theme, EQ, shuffle, repeat, sleep timer, gapless)
+- **DataStore** for all preferences (theme, EQ, shuffle, repeat, sleep timer, gapless, crossfade, folder blacklist, dynamic colour)
 - **LRCLib API** for on-demand lyrics fetch — no API key required
 
 ---
@@ -141,6 +146,7 @@ MexMp3v2/
 │       │   │       └── PrefsRepository.kt
 │       │   ├── receiver/
 │       │   │   ├── BecomingNoisyReceiver.kt
+│       │   │   ├── BootReceiver.kt
 │       │   │   └── MediaButtonReceiver.kt
 │       │   ├── service/
 │       │   │   └── MusicService.kt
@@ -158,6 +164,7 @@ MexMp3v2/
 │       │   │   │   ├── NowPlayingScreen.kt
 │       │   │   │   ├── EqualizerScreen.kt
 │       │   │   │   ├── SettingsScreen.kt
+│       │   │   │   ├── DetailScreen.kt
 │       │   │   │   ├── SongOptionsSheet.kt
 │       │   │   │   └── MetadataEditorSheet.kt
 │       │   │   ├── theme/
@@ -313,14 +320,17 @@ Splash Screen
                ├── Settings  (top bar)
                │     ├── Theme Picker  (12-swatch visual grid)
                │     ├── Equalizer  (Poweramp-style full-screen, Custom fully tunable)
-               │     ├── Sleep Timer
+               │     ├── Crossfade  (0–12 seconds slider)
                │     ├── Gapless Playback toggle
+               │     ├── Dynamic Colour toggle
+               │     ├── Folder Blacklist
+               │     ├── Sleep Timer
                │     └── Rescan Library
                └── Now Playing  (mini-player tap OR notification tap)
                      ├── Spinning vinyl disk (pauses/resumes at exact angle)
-                     ├── Waveform visualiser
-                     ├── Seek bar
-                     ├── Transport controls (shuffle restores sequential order when off)
+                     ├── 32-bar waveform visualiser
+                     ├── Seek bar with glowing thumb
+                     ├── Transport controls (glow-pulse play button)
                      ├── Audio quality badge + Bluetooth device indicator
                      └── Lyrics panel (expandable; full-screen with song title on top)
 ```
@@ -354,7 +364,14 @@ The picker shows a 2-column gradient swatch grid with a checkmark on the active 
 
 Uses `android.media.audiofx.Equalizer` bound to ExoPlayer's `audioSessionId`.
 
-UI features: live spectrum curve (Canvas), 5 vertical drag sliders, dB readout per band, grid lines at ±6 dB / ±12 dB, scrollable preset chips, Bass + Treble quick-adjust sliders, ON/OFF pill toggle.
+### UI Features (v2.1.11 rebuild)
+- **Animated spectrum curve** — multi-color cubic spline with per-band color gradient fill
+- **5 vertical band sliders** — pill-shaped thumbs with per-band glow shadow; tap anywhere on track to snap instantly
+- **Per-band color coding** — Bass (orange), Low Mid (amber), Mid (green), High Mid (blue), Treble (violet)
+- **Arc/knob quick-adjust dials** — Bass, Low Mid, and Treble shown as animated arc dials with sweep animation
+- **Power toggle button** — circular button with pulse glow when EQ is active
+- **dB axis labels** — +12 / +6 / 0 / -6 / -12 displayed left of sliders
+- **Preset chips** — scrollable horizontal row with active highlight
 
 **Presets** (millibels — 100 = 1 dB):
 
@@ -371,7 +388,7 @@ UI features: live spectrum curve (Canvas), 5 vertical drag sliders, dB readout p
 | Vocal | −200 | +100 | +600 | +400 | −100 |
 | Custom | user | user | user | user | user |
 
-The **Custom** preset preserves whatever band positions you drag to — selecting it does not reset values to zero. Any band drag while on any preset automatically switches to Custom and saves the configuration.
+The **Custom** preset preserves whatever band positions you drag to — selecting it does not reset values to zero.
 
 ---
 
@@ -385,7 +402,6 @@ Looks for a `.lrc` file alongside the audio file:
 /Music/Davido - Unavailable.mp3
 /Music/Davido - Unavailable.lrc   ← auto-detected
 ```
-LRC time tags (`[00:12.34]`) are stripped to plain text if synced data is malformed.
 
 ### Stage 2 — LRCLib API (online fallback)
 Queries [lrclib.net](https://lrclib.net) — free, no API key:
@@ -416,125 +432,153 @@ Tap the expand icon in the lyrics card header to enter full-screen lyrics view. 
 | `BLUETOOTH_CONNECT` | API 31+ | Bluetooth device name on Now Playing |
 | `INTERNET` | all | Lyrics fetch via LRCLib |
 
-All dangerous permissions use runtime requests with rationale dialogs.
-Battery optimisation exemption is requested automatically after onboarding completes.
-
----
-
-## Known Limitations / TODOs
-
-- **Metadata writing** — editor UI present; saving to disk is a no-op pending `MANAGE_MEDIA` implementation
-- **True gapless playback** — toggle exists; requires `onMediaItemTransition` architecture (planned for v2.1)
-- **Home-screen widget** — planned
-- **Crossfade** — DataStore key reserved; implementation pending
+All dangerous permissions use runtime requests with rationale dialogs. Battery optimisation exemption is requested automatically after onboarding completes.
 
 ---
 
 ## Changelog
 
+### v2.1.11 — UI Overhaul & Equalizer Rebuild
+
+#### New / Changed
+
+- **Complete UI redesign** — Every screen rebuilt with a new ultra-modern bespoke aesthetic: frosted-glass cards with drop shadows, gradient count badges, animated playing indicators, and consistent spacing throughout.
+
+- **SongCard** — Now features a glow shadow on the album art thumbnail when the track is playing, an animated 3-bar playing indicator (replacing the old pulsing dot), a semi-transparent primary-tinted background tint, and the artist/album separator changed from `•` to `·` for cleaner rendering.
+
+- **MiniPlayer** — Rebuilt with a top accent line in the primary theme color, a pill-shaped circular play/pause button with border, album art shadow glow when playing, and a `FastOutSlowInEasing` entrance.
+
+- **AlbumsScreen** — Album cards now have a gradient overlay on the bottom half of the album art, and the song count is shown in a primary-colored pill overlaid directly on the art rather than below it.
+
+- **ArtistsScreen** — Artist rows now display a gradient radial avatar circle with the artist's initial letter instead of a generic music note icon.
+
+- **PlaylistsScreen** — Cards rebuilt with rounded icon boxes and gradient backgrounds; create/delete dialogs upgraded to use `Button` instead of `TextButton`; FAB is now circular with elevation shadow.
+
+- **SearchScreen** — New gradient count badge on results, illustrated empty and no-results states with radial glow backdrop circles.
+
+- **SettingsScreen** — All setting rows rebuilt with icon boxes (rounded square with primary tint background) and card drop shadows. Styled `Switch` with correct `onPrimary` thumb color. Sleep timer shows active selection in primary color.
+
+- **NowPlayingScreen** — Play button now has an infinite radial glow pulse animation when playing. Prev/Next buttons wrapped in `surfaceVariant` circles. Shuffle and Repeat buttons tint their background circle when active. Seek bar has a custom shadow thumb; elapsed time shown in primary color.
+
+- **Equalizer — complete rebuild** inspired by Poweramp:
+  - 5 unique per-band colors: Bass (orange `#FF6B35`), Low Mid (amber `#FFD93D`), Mid (green `#6BCB77`), High Mid (blue `#4D96FF`), Treble (violet `#BB86FC`)
+  - Multi-color animated spectrum curve — cubic spline with per-band horizontal gradient fill
+  - Band sliders use pill-shaped thumbs (28×20 dp rounded rect) with glow shadow and gradient fill (white → band color)
+  - dB axis labels (+12/+6/0/−6/−12) shown left of slider area
+  - Power toggle is now a circular button with pulse glow when EQ is active
+  - Three arc/knob quick-adjust dials (Bass, Low Mid, Treble) replace the old horizontal bars; each shows an animated arc sweep with a thumb dot and center dB readout
+  - Band color indicator dots below each slider label
+
+- **Last.fm removed entirely** — `LastFmRepository.kt` deleted; all scrobble calls, session key storage, username/password flow, and related DataStore keys removed from `MainViewModel`, `PrefsRepository`, `Constants`, `NowPlayingScreen`, and `SettingsScreen`. No network calls are made during playback.
+
+- **Version** bumped to `2.1.11` (versionCode 13).
+
+---
+
+### v2.1.0 — Polish Release
+
+#### Bug Fixes
+
+- **Dynamic Colour not working** — Fixed palette swatch priority (`vibrantSwatch` first), thumbnail size increased to 256×256, background changed to a vertical gradient (accent top → near-black bottom) matching Spotify/Apple Music.
+
+- **Last.fm developer note removed from login dialog** — Was shown to users; removed entirely.
+
+---
+
+### v2.0.9 — Fix & Polish Release
+
+#### Bug Fixes
+
+- **Crossfade and Gapless settings not persisting** — Both were instance variables defaulting to 0/false on every service start. Fixed by reading from DataStore in `onServiceConnected` and applying immediately on bind.
+
+---
+
+### v2.0.8 — Completion Release
+
+#### Improvements
+
+- **True gapless playback** — ExoPlayer native playlist. Next track buffered immediately; `onMediaItemTransition` updates metadata, notification, widget, and preloads the next-next song.
+- **Metadata writing** — `updateSongMetadata()` writes to MediaStore via `ContentResolver.update()` on all API levels.
+- **Home screen widget** — Song title, artist, and prev/play/next controls with live updates.
+- **Crossfade** — Configurable 0–12 second crossfade via Settings → Audio → Crossfade.
+
+---
+
+### v2.0.7 — Premium Features Release
+
+#### New Features
+
+- **Crossfade** — 20-step volume fade between songs. Configurable 0–12 seconds.
+- **Dynamic Colour Theming** — Now Playing background animates to album art dominant color using Palette API.
+- **Home Screen Widget** — 4×2 widget with controls; updates instantly on playback change.
+- **Folder Blacklist** — Exclude folders from library. Triggers auto-rescan on change.
+
+#### Technical
+- Added `androidx.palette:palette-ktx:1.0.0`
+- `MexMp3Widget` registered as `AppWidgetProvider`
+- All 4 features persist via DataStore
+
+---
+
 ### v2.0.6 — Bug Fix Release
 
-#### Bug Fix
-
-- **Notification tap not opening Now Playing screen** — Tapping the notification player while the app was already open did nothing — the app stayed on whatever screen was visible. Root cause: `openNowPlaying` was a plain `var` on the Activity, so when `onNewIntent()` fired Compose had no way to observe the change and `AppRoot` never recomposed. Fixed by changing `openNowPlaying` to `by mutableStateOf(false)` so Compose observes it as State. Added an `onNowPlayingConsumed` callback so the composable resets the flag after consuming it, preventing double-navigation. The `LaunchedEffect` now fires every time the notification is tapped regardless of which screen the user is on, navigating directly to the Now Playing screen with `launchSingleTop = true`.
+- **Notification tap not opening Now Playing** — `openNowPlaying` changed from `var` to `mutableStateOf` so Compose observes it correctly.
 
 ---
 
 ### v2.0.5 — Bug Fix Release
 
-#### Bug Fixes
-
-- **Delete song not working — song stays on list after confirmation** — On Android 11+ (API 30+), apps cannot directly delete media files they did not create. The previous implementation called `ContentResolver.delete()` directly which silently returned 0 (deleted nothing) without throwing any error, so the song stayed on the list and no feedback was shown. Fixed with a two-path approach: on Android 11+ the system `MediaStore.createDeleteRequest()` is used, which shows the native OS "Allow deletion?" permission dialog — after the user confirms, the library rescans and a "Song deleted successfully" snackbar appears. On Android 10 and below the direct delete path is used with explicit success/failure feedback via snackbar. A `SnackbarHost` was also added to the main `Scaffold` so feedback toasts display correctly throughout the app.
+- **Delete song not working on Android 11+** — Two-path approach: `MediaStore.createDeleteRequest()` on API 30+ (shows native OS dialog); direct delete on API 29 and below.
 
 ---
 
 ### v2.0.4 — Bug Fix Release
 
-#### Bug Fixes
-
-- **Album art spinning too fast** — `animateTo` was being called with `infiniteRepeatable` as its `animationSpec`, which is invalid — `animateTo` runs to a single target value and `infiniteRepeatable` caused it to jump to the target instantly. Replaced with a `while(true)` loop that calls `animateTo(+360°)` with a 12-second `tween`, then `snapTo(angle % 360)` to prevent the value growing unbounded. The disk now rotates at a natural one revolution per 12 seconds and pauses/resumes at the exact angle when playback is toggled.
-
-- **Custom EQ bands still not sliding correctly** — The drag lambda inside `pointerInput` was capturing `dB` at composition time — because `pointerInput` only recomposes when its keys change, the lambda was reading a stale value on every drag event, causing the thumb to freeze or jump erratically. Fixed by wrapping `dB` in `rememberUpdatedState` so the lambda always reads the latest live value regardless of recomposition. The thumb now follows the finger smoothly with zero lag.
-
-- **App closing when swiped from recents on Vivo Y20** — Three-part fix: (1) `startForeground()` is now called immediately inside `onCreate()` rather than waiting for `onStartCommand()` — on Vivo Funtouch OS the gap between these two calls is enough for the OS to kill the service. (2) `MainViewModel.onCleared()` no longer calls `unbindService()` while music is playing — removing the last bound client while the service isn't yet self-started was the primary kill trigger. (3) Added `BootReceiver` (`RECEIVE_BOOT_COMPLETED` + `QUICKBOOT_POWERON`) to restart the service after device reboot, handling Vivo's aggressive post-reboot service cleanup.
-
-- **Lyrics sync lag and stutter** — `activeIndex` was computed inside `remember(state, positionMs)` — this caused the entire lyrics `Column` (all lines, all animations) to recompose on every position tick (every 500ms). Replaced with `derivedStateOf` so only `activeIndex` is recomputed on position change, never the lyrics list. Scroll animation also tightened from `tween(400)` to `tween(300, LinearOutSlowInEasing)` for crisper line tracking.
+- **Album art spinning too fast** — Fixed with `while(true)` loop + `snapTo(angle % 360)`.
+- **Custom EQ bands not sliding** — Fixed with `rememberUpdatedState` so drag lambda reads live `dB` value.
+- **App closing on Vivo Y20** — `startForeground()` moved to `onCreate()`; `unbindService()` not called while playing; `BootReceiver` added.
+- **Lyrics sync stutter** — `activeIndex` moved to `derivedStateOf`; scroll animation tightened to `tween(300)`.
 
 ---
 
 ### v2.0.3 — Bug Fix Release
 
-#### Bug Fixes
-
-- **Music stops when app swiped from recents (Redmi / budget devices)** — The previous fix used `startService()` which Android silently blocks on API 26+ when called from the background. Changed to `startForegroundService()` on API 26+ (with `startService()` fallback for older). This correctly re-promotes the service to a self-started foreground service the moment the app is swiped away, so even after the ViewModel unbinds there is no reason for the OS to kill it. Notification player remains visible and music keeps playing — only the ✕ button stops everything.
-
-- **EQ band sliders lagging / not following finger** — Three root causes fixed: (1) Thumb position was driven by the spring-animated `animatedDb` value instead of the raw `dB`, causing the thumb to visually lag behind the finger. Fixed to use raw `dB` for thumb position so it follows the finger with zero lag. (2) Thumb offset calculation was incorrectly treating pixels as dp (`thumbOffset.dp / 3.5f`), making it move the wrong distance. Fixed using `LocalDensity` for correct px→dp conversion. (3) Replaced `detectVerticalDragGestures` with `awaitEachGesture` + `awaitFirstDown` + `awaitPointerEvent` loop — more reliable on budget devices, also snaps the band value immediately on touch-down so tapping anywhere on the track jumps to that position instantly. Touch hit area widened from 28 dp to 44 dp for easier finger targeting.
+- **Music stops when swiped from recents** — Changed to `startForegroundService()` on API 26+.
+- **EQ band sliders lagging** — Raw `dB` used for thumb position; `awaitEachGesture` for reliable touch; hit area widened to 44 dp.
 
 ---
 
 ### v2.0.2 — UX Polish & Bug Fix Release
 
-#### Bug Fixes
-
-- **Shuffle stuck — could not return to sequential order** — Once shuffle was enabled, turning it off had no effect; the queue remained in its shuffled state and the player kept picking random tracks. Fixed by storing the original unshuffled queue (`originalQueue` StateFlow) when `playQueue()` is called. Toggling shuffle off now restores the original order and re-positions the queue index to the currently playing song so playback continues seamlessly.
-
-- **Shuffle picking same song repeatedly** — `skipToNext()` in shuffle mode used `q.indices.random()` which could return the current index. Fixed to exclude the current index when the queue has more than one song.
-
-- **Custom EQ bands resetting to zero** — Selecting the "Custom" preset chip was re-seeding all five band sliders to 0 dB from `Constants.EQ_PRESETS["Custom"]`. Fixed so that tapping "Custom" keeps the current band positions as-is and saves them as the new custom configuration, making the Custom preset a true "edit from here" mode.
-
-- **Recent screen showing all songs** — The Recent tab was showing all library songs sorted by `dateAdded` instead of songs the user had actually played. Fixed to read from the Room `recentDao` play-history ordered most-recent-first, with a fallback to recently-added sort only if play history is empty.
-
-#### Improvements
-
-- **Spinning vinyl disk animation** — The Now Playing album art now rotates continuously like a vinyl record while playing. When paused, the disk freezes at its exact current angle using `Animatable`. Resuming playback continues spinning from that angle with no jump.
-
-- **Larger song list rows** — `SongCard` album art thumbnail increased from 54 dp to 60 dp; row vertical padding increased from 12 dp to 14 dp. All song list screens benefit automatically.
-
-- **Removed black margin above song list** — The `TopAppBar` inside `LibraryScaffold` had its `windowInsets` and `contentWindowInsets` zeroed, eliminating the excess black space pushing the song list down.
-
-- **Full-screen lyrics mode** — The lyrics card now has an expand icon in its header. Tapping it opens a full-screen overlay showing the song title and artist at the top, with larger text, full karaoke sync highlighting, and auto-scroll.
-
-- **Wider lyrics panel** — Inline lyrics card maximum height increased from 320 dp to 480 dp, showing significantly more lines before scrolling is needed.
-
-- **Song list sort options** — Sort icon button added to the Songs screen header with three options: Title A–Z (default), Recently Added, Most Played. Active non-default sort highlights the icon in the primary theme colour.
-
-- **Delete song from device** — "Delete from device" option added to the long-press song options sheet (shown in red). Tapping it shows a confirmation dialog. On confirmation the song is removed from MediaStore and the library rescans automatically.
+- **Shuffle stuck** — `originalQueue` StateFlow added; turning shuffle off restores original order at current song.
+- **Custom EQ resetting** — Selecting Custom no longer resets bands to zero.
+- **Recent screen showing all songs** — Now reads from Room play-history.
+- **Spinning vinyl disk** — Continuous rotation with exact angle hold on pause.
+- **Delete song from device** — Added to long-press options sheet with confirmation.
+- **Song list sort** — Title A–Z / Recently Added / Most Played.
 
 ---
 
 ### v2.0.1 — Bug Fix & Improvement Release
 
-#### Bug Fixes
-
-- **EQ page touch passing through to Settings** — Opening the Equalizer from Settings and touching anywhere on the EQ screen was also triggering items on the Settings screen underneath. Fixed by wrapping the EQ overlay in a full-screen `Box` with a `pointerInput` interceptor consuming all touch events.
-
-- **Custom EQ bands unresponsive / stuck** — Dragging band sliders on the Custom preset had no visible effect. Fixed by introducing a `liveBands` local `mutableStateOf` that updates immediately on drag without waiting for a DataStore round-trip.
-
-- **EQ presets have no audible effect** — Changing presets produced no change in audio. Fixed by lazily initialising the `Equalizer` inside `applyEqPreset()`, adding `runCatching {}` around `setBandLevel()` calls, and ensuring the EQ re-enables itself before applying.
-
-- **Music stops when app swiped from recents** — Fixed by calling `startForeground()` immediately inside `onTaskRemoved()`.
-
-#### Improvements
-
-- Audio quality badge on Now Playing screen (320 kbps, FLAC, AAC, etc.)
-- Bluetooth connected device indicator on Now Playing screen
-- Album detail screen redesigned with larger art and song-count pill
-- Playlist detail: Add Songs FAB with searchable bottom sheet
+- **EQ touch passing through to Settings** — Full-screen `Box` with `pointerInput` interceptor.
+- **Custom EQ unresponsive** — `liveBands` local `mutableStateOf` updates immediately on drag.
+- **EQ presets no audible effect** — Lazy `Equalizer` init with `runCatching` around `setBandLevel()`.
+- **Music stops when swiped from recents** — `startForeground()` in `onTaskRemoved()`.
+- Audio quality badge and Bluetooth indicator added to Now Playing.
 
 ---
 
 ### v2.0.0 — Production Release
 
-#### Critical Bug Fixes
-- Infinite song skip bug fixed (`!player.hasNextMediaItem()` guard)
-- Music stops when app swiped from recents — `onTaskRemoved()` + AlarmManager restart
-- Release APK crashes — full R8/ProGuard rules added
-- `ForegroundServiceDidNotStartInTimeException` on Android 12+ — `startForeground()` moved into `playSong()`
-- Synchronous bitmap load ANR — async IO coroutine + bitmap cache
-- App killed when screen off — `PARTIAL_WAKE_LOCK` properly acquired/released
-- Battery optimisation / Doze mode killing service — exemption request after onboarding
-- EQ QuickAdjustBar non-functional — `detectHorizontalDragGestures` fix
-- `onStartCommand` crash on null intent — graceful handling added
+- Infinite song skip bug fixed
+- Release APK crashes — full R8/ProGuard rules
+- `ForegroundServiceDidNotStartInTimeException` on Android 12+ fixed
+- ANR from synchronous bitmap load fixed
+- `PARTIAL_WAKE_LOCK` properly managed
+- Battery optimisation exemption requested after onboarding
+- EQ QuickAdjustBar non-functional fixed
+- `onStartCommand` null intent crash fixed
 
 ---
 
