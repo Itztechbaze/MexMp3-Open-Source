@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.0-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.0__patch-blue"/>
 </p>
 
 ---
@@ -447,6 +447,23 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.0_patch
+
+#### Bug Fixes & Improvements
+
+- **Bluetooth crackle/stutter during downloads — fixed** (`MusicService.kt`):
+  - Root cause: concurrent file downloads starve ExoPlayer's audio render thread of CPU time. Over Bluetooth (A2DP), the higher output latency amplifies any render-thread jitter into audible crackling and hanging.
+  - Fix 1: Audio render thread priority raised to `THREAD_PRIORITY_AUDIO` so the OS scheduler pre-empts download/IO threads when audio needs to render.
+  - Fix 2: `DefaultLoadControl` buffer tuned to 10 s min / 15 s max. The pre-filled buffer absorbs CPU starvation bursts from concurrent downloads without causing stutters.
+
+- **EQ — theme-aware colours** (`EqualizerScreen.kt`): All hardcoded hex colours removed. Spectrum palette, per-band accents, canvas backgrounds, slider thumbs, preset chips, and the stereo strip now derive from `MaterialTheme.colorScheme` (primary, secondary, tertiary). The EQ automatically matches whichever app theme the user has selected.
+
+- **Settings version string** (`SettingsScreen.kt`): Updated from `2.1.11` → `2.2.0_patch`.
+
+- **Version** bumped to `2.2.0_patch` (versionCode 15).
+
+---
 
 ### v2.2.0 — Studio Mastering Equalizer
 
