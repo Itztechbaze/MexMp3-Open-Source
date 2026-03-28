@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.0__patch-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.1__stable-blue"/>
 </p>
 
 ---
@@ -447,6 +447,24 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.1_stable
+
+#### Bug Fixes & Improvements
+
+- **Repeat mode not working** (`MusicService.kt`): Fixed `REPEAT_ONE` being blocked by gapless pre-loading. `onPlaybackStateChanged` now always triggers `handleSongEnd` when repeat-one is active regardless of whether a next item is queued. `handleSongEnd` for `REPEAT_ONE` now fully clears and re-prepares the current track instead of the broken `seekTo+play` approach.
+
+- **Crossfade applied on manual Next press** (`MusicService.kt`): `skipToNext()` now calls `playSong()` directly with no fade. Crossfade only applies during automatic end-of-track transitions via `handleSongEnd()`.
+
+- **Rescan Library shows no feedback** (`SettingsScreen.kt`): Rescan card now shows a `CircularProgressIndicator` and "Scanning library…" subtitle while scanning is in progress so users get clear visual confirmation the action registered.
+
+- **Folder Blacklist removed from Settings** (`SettingsScreen.kt`): The Folder Blacklist card and its dialog have been removed from the settings screen entirely.
+
+- **Notification tap opens Songs screen instead of Now Playing** (`MainActivity.kt`): Navigation to Now Playing now waits until the NavHost has finished composing and registered its graph before calling `navigate()`, so the notification tap reliably opens the Now Playing screen.
+
+- **Version** bumped to `2.2.1_stable` (versionCode 16).
+
+---
 
 ### v2.2.0_patch
 
