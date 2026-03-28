@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.1.11-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.0-blue"/>
 </p>
 
 ---
@@ -57,7 +57,7 @@
 | MediaSession (Bluetooth / headset buttons) | ✅ |
 | Audio focus handling + ducking | ✅ |
 | BecomingNoisy receiver (headset unplug) | ✅ |
-| **Poweramp-style 5-band Equalizer — complete rebuild** | ✅ |
+| **Studio Mastering 10-band Equalizer — complete rebuild** | ✅ |
 | **Per-band color coding (5 unique colors per band)** | ✅ |
 | **Multi-color animated spectrum curve with gradient fill** | ✅ |
 | **Arc/knob quick-adjust dials (Bass, Low Mid, Treble)** | ✅ |
@@ -319,7 +319,7 @@ Splash Screen
                ├── Search  (top bar)
                ├── Settings  (top bar)
                │     ├── Theme Picker  (12-swatch visual grid)
-               │     ├── Equalizer  (Poweramp-style full-screen, Custom fully tunable)
+               │     ├── Equalizer  (Studio Mastering 10-band, JBL Stereo, Custom fully tunable)
                │     ├── Crossfade  (0–12 seconds slider)
                │     ├── Gapless Playback toggle
                │     ├── Dynamic Colour toggle
@@ -364,31 +364,41 @@ The picker shows a 2-column gradient swatch grid with a checkmark on the active 
 
 Uses `android.media.audiofx.Equalizer` bound to ExoPlayer's `audioSessionId`.
 
-### UI Features (v2.1.11 rebuild)
-- **Animated spectrum curve** — multi-color cubic spline with per-band color gradient fill
-- **5 vertical band sliders** — pill-shaped thumbs with per-band glow shadow; tap anywhere on track to snap instantly
-- **Per-band color coding** — Bass (orange), Low Mid (amber), Mid (green), High Mid (blue), Treble (violet)
-- **Arc/knob quick-adjust dials** — Bass, Low Mid, and Treble shown as animated arc dials with sweep animation
-- **Power toggle button** — circular button with pulse glow when EQ is active
-- **dB axis labels** — +12 / +6 / 0 / -6 / -12 displayed left of sliders
-- **Preset chips** — scrollable horizontal row with active highlight
+### Studio Mastering EQ — v2.2.0 (complete ground-up rebuild)
 
-**Presets** (millibels — 100 = 1 dB):
+A **10-band professional equalizer** with a bespoke studio mastering UI — built entirely from scratch. Nothing from the previous EQ was retained.
 
-| Preset | 60Hz | 230Hz | 910Hz | 4kHz | 14kHz |
-|---|---|---|---|---|---|
-| Flat | 0 | 0 | 0 | 0 | 0 |
-| Bass Boost | +900 | +600 | +100 | −100 | −200 |
-| Rock | +500 | +200 | −300 | +300 | +600 |
-| Jazz | +400 | +300 | +100 | +300 | +400 |
-| Pop | −100 | +300 | +500 | +300 | −100 |
-| Classical | +500 | +300 | −50 | +200 | +400 |
-| Hip-Hop | +700 | +500 | +100 | −200 | −100 |
-| Electronic | +600 | +200 | −300 | +200 | +700 |
-| Vocal | −200 | +100 | +600 | +400 | −100 |
-| Custom | user | user | user | user | user |
+#### UI & Visual Features
+- **10-band slider array** — 32 Hz · 64 Hz · 125 Hz · 250 Hz · 500 Hz · 1kHz · 2kHz · 4kHz · 8kHz · 16kHz
+- **Studio spectrum analyzer** — real-time Catmull-Rom spline curve with dual fill (curve + mirrored above) and an animated neon scanner line sweeping across when EQ is active
+- **Per-band accent palette** — a continuous teal → electric-blue → violet gradient spectrum, each band uniquely colored; control nodes glow on the analyzer
+- **Sharp studio thumb capsules** — 18×10 dp ultra-thin pill with white-to-accent gradient fill and accent glow shadow; clearly different from anything in the old EQ
+- **dB badge** above each slider turns on/off and glows the band's accent color when non-zero
+- **Stereo Enhancement Strip** — L/R animated bar-meter with phase-coherent wide-stereo field visualization, styled after professional mastering consoles
+- **Studio Power Button** — sweep-gradient border ring with animated pulse; teal glow when active
+- **Dark studio canvas** — `#070B11` background for the analyzer, giving a true hardware console feel
+- **Preset chips** — Studio / Mastering / JBL Stereo chips have a dot indicator and a teal/blue dual-gradient highlight; all other presets cycle violet/indigo
 
-The **Custom** preset preserves whatever band positions you drag to — selecting it does not reset values to zero.
+#### Presets (10-band, millibels — 100 = 1 dB)
+
+| Preset | 32 | 64 | 125 | 250 | 500 | 1k | 2k | 4k | 8k | 16k |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Flat | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Bass Boost | +900 | +800 | +600 | +300 | +50 | −50 | −100 | −200 | −200 | −200 |
+| Treble Boost | −200 | −200 | −100 | 0 | +100 | +200 | +400 | +600 | +800 | +900 |
+| Rock | +500 | +400 | +200 | −300 | 0 | +200 | +300 | +400 | +300 | +200 |
+| Jazz | +400 | +350 | +200 | +100 | +100 | +200 | +300 | +300 | +200 | +100 |
+| Pop | −100 | −100 | +100 | +400 | +500 | +400 | +300 | +200 | +100 | +50 |
+| Classical | +500 | +400 | +300 | +100 | −50 | +50 | +100 | +300 | +350 | +400 |
+| Hip-Hop | +700 | +600 | +500 | +300 | +100 | −100 | −200 | −200 | −100 | 0 |
+| Electronic | +600 | +500 | +200 | −200 | −300 | −100 | +200 | +300 | +400 | +500 |
+| Vocal | −200 | −300 | −200 | +200 | +600 | +700 | +500 | +300 | +100 | −50 |
+| **Studio** | +300 | +200 | +100 | −50 | −100 | 0 | +100 | +200 | +300 | +400 |
+| **Mastering** | +200 | +150 | +50 | −50 | −100 | −100 | +50 | +150 | +250 | +350 |
+| **JBL Stereo** | +800 | +700 | +400 | +100 | −100 | +100 | +300 | +500 | +600 | +700 |
+| Custom | user | user | user | user | user | user | user | user | user | user |
+
+The **Custom** preset preserves whatever band positions you drag to — selecting it does not reset values to zero. 10-band values are averaged pairwise to 5-band when passed to the Android `audiofx.Equalizer` API for full hardware compatibility.
 
 ---
 
@@ -437,6 +447,26 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.0 — Studio Mastering Equalizer
+
+#### New / Changed
+
+- **Equalizer — complete ground-up rebuild** (nothing from the v2.1.11 EQ was kept):
+  - Upgraded from 5-band to **10-band** professional studio layout: 32 Hz, 64 Hz, 125 Hz, 250 Hz, 500 Hz, 1kHz, 2kHz, 4kHz, 8kHz, 16kHz
+  - New teal/electric-blue/violet per-band accent palette — each of the 10 bands has a unique color drawn from a continuous spectrum gradient
+  - Studio spectrum analyzer with Catmull-Rom cubic spline, dual fill (below and mirrored above centerline), animated neon scanner sweep line, and glowing control nodes
+  - Ultra-thin 18×10 dp studio thumb capsules with white-to-accent gradient and accent glow shadow — sharp, hardware-console aesthetic
+  - Stereo Enhancement Strip with animated L/R bar meters and phase-coherent wide-stereo field label — JBL-inspired stereo image
+  - 14 presets including three new studio-grade presets: **Studio**, **Mastering**, and **JBL Stereo**
+  - Power button uses a sweep-gradient border ring with animated pulse glow in teal
+  - Dark `#070B11` analyzer canvas for authentic hardware console feel
+  - Preset chips: Studio / Mastering / JBL Stereo have dot indicator + teal-blue dual-gradient highlight
+  - 10-band → 5-band pairwise averaging for full `android.media.audiofx.Equalizer` API compatibility
+
+- **Version** bumped to `2.2.0` (versionCode 14).
+
+---
 
 ### v2.1.11 — UI Overhaul & Equalizer Rebuild
 
