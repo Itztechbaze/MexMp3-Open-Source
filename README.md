@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.1__stable-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.4__stable-blue"/>
 </p>
 
 ---
@@ -66,7 +66,10 @@
 | **10 EQ presets + fully functional Custom mode** | ✅ |
 | Sleep timer | ✅ |
 | Shuffle (true random; restores sequential order when turned off) | ✅ |
-| Repeat (none / all / one) | ✅ |
+| App logo shown in vinyl disc centre on Now Playing (counter-rotates to stay upright) | ✅ |
+| Album art editor in Edit Song Info (gallery picker with live preview) | ✅ |
+| Rescan Library triggers MediaScannerConnection filesystem scan | ✅ |
+| Repeat (none / all / one) — fully functional, ExoPlayer synced | ✅ |
 | Song list sort: Title A–Z / Recently Added / Most Played | ✅ |
 | **12 bespoke ultra-sleek app themes** | ✅ |
 | Visual swatch grid theme picker | ✅ |
@@ -447,6 +450,55 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.4_stable
+
+#### Bug Fixes
+
+- **Crossfade applied on manual Next/Prev press** (`MusicService.kt`):
+  When a crossfade was in progress (the fade-out coroutine was running), pressing Next or Prev would start the new song but the `crossfadeJob` coroutine kept running in the background and continued ramping `player.volume` down to 0, silencing the new song. Fixed by adding `crossfadeJob?.cancel(); crossfadeJob = null; player.volume = 1f` at the top of both `skipToNext()` and `skipToPrevious()`. Crossfade now only ever applies to automatic end-of-track transitions via `handleSongEnd()` / `crossfadeThenPlay()`.
+
+- **Deprecation warning: `Icons.Rounded.ArrowBack`** (`SettingsScreen.kt`):
+  Replaced `Icons.Rounded.ArrowBack` with `Icons.AutoMirrored.Rounded.ArrowBack` and added the corresponding `import androidx.compose.material.icons.automirrored.rounded.ArrowBack`. Eliminates the Kotlin compiler warning on every release build.
+
+- **Version** bumped to `2.2.4_stable` (versionCode 19).
+
+---
+
+### v2.2.3_stable
+
+#### New Features
+
+- **App logo in vinyl disc centre** (`NowPlayingScreen.kt`):
+  The blank dark circle in the middle of the spinning vinyl disc now shows the MexMp3 app icon (`ic_launcher_round`). The logo is drawn with a counter-rotation equal to `-rotation.value` so it stays perfectly upright while the disc spins around it — exactly like a real vinyl label. The surrounding ring uses a semi-transparent background for depth, with a small spindle dot on top.
+
+- **Album art editor in Edit Song Info** (`MetadataEditorSheet.kt`, `MainViewModel.kt`, `AndroidManifest.xml`):
+  The Edit Song Info sheet now has a full album art picker above the text fields. The current album art is displayed in a rounded square with a camera badge overlay. Tapping it opens the system image gallery (`ActivityResultContracts.GetContent`). After picking, the sheet shows a live preview of the new image and a "Remove new image" option to revert. On Save, the art is written via three complementary paths:
+  - **Path A** — writes `folder.jpg` alongside the audio file; picked up by MediaScanner on all API levels and associated with every song in that folder.
+  - **Path B** — inserts into the `content://media/external/audio/albumart` MediaStore table (delete old row first, then insert new); works reliably on API 26–29, and succeeds on many API 30+ OEM builds.
+  - **Path C** — on API 29+ deletes the stale MediaStore thumbnail cache row for the album, then invalidates Coil's in-memory cache for the art URI so the updated image appears immediately without an app restart.
+  Added `READ_MEDIA_IMAGES` permission to `AndroidManifest.xml` for gallery access on Android 13+.
+
+- **Version** bumped to `2.2.3_stable` (versionCode 18).
+
+---
+
+### v2.2.2_stable
+
+#### Bug Fixes
+
+- **Settings screen had no back navigation** (`SettingsScreen.kt`, `MainActivity.kt`):
+  The Settings screen was a bare `composable()` with no `TopAppBar`, so the only way to leave it was the phone's hardware/gesture back button — the bottom navigation tabs were hidden (by design on a detail screen) but nothing replaced them. Fixed by adding a proper `TopAppBar` with a back-arrow `IconButton` directly inside `SettingsScreen`. A new `onBack: () -> Unit` parameter is wired from `MainActivity`'s `NavHost` via `navController::popBackStack`.
+
+- **Rescan Library did not find new songs** (`MusicRepository.kt`):
+  `scanSongs()` was only querying Android's MediaStore index — it never told the OS to re-index the filesystem. Files copied onto the device after the last system scan were invisible. Fixed by adding `triggerMediaScan()` which walks `Music/`, `Download/`, and secondary storage volumes, feeds every audio file path to `MediaScannerConnection.scanFile()`, and uses `suspendCancellableCoroutine` to wait until every file has been processed before the MediaStore query runs. New songs now appear immediately on Rescan.
+
+- **Repeat button was decorative — songs did not repeat** (`MusicService.kt`, `MainViewModel.kt`):
+  Two compounding bugs: (1) `cycleRepeat()` in `MainViewModel` only wrote to `MusicService.repeatMode` StateFlow but never called any function on the service, so ExoPlayer's own `player.repeatMode` stayed `REPEAT_MODE_OFF` permanently. Added `fun setRepeatMode(mode: Int)` to `MusicService` that updates both the StateFlow and `player.repeatMode` atomically; `cycleRepeat()` now calls `withService { it.setRepeatMode(new) }`. (2) `handleSongEnd()` for `REPEAT_ONE` set `isChangingSong = false` immediately after `player.prepare()` was called (before it completes), creating a race where `onPlaybackStateChanged(STATE_ENDED)` could fire during setup and re-enter `handleSongEnd()`, causing the song to skip instead of repeat. Fixed by posting the `isChangingSong = false` reset via `mainHandler.postDelayed(300ms)` so it only clears after ExoPlayer has moved past `STATE_IDLE/ENDED`.
+
+- **Version** bumped to `2.2.2_stable` (versionCode 17).
+
+---
 
 ### v2.2.1_stable
 
