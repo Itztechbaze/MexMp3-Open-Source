@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.4__stable-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.5__stable-blue"/>
 </p>
 
 ---
@@ -450,6 +450,28 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.5_stable
+
+#### Bug Fixes
+
+- **Build error: `LibraryState.Loading` used as expression** (`MainViewModel.kt`):
+  After changing `Loading` from `data object` to `data class Loading(val scannedCount: Int = 0)`, the initial StateFlow value was still written as `LibraryState.Loading` (no parentheses), causing a Kotlin compiler error `Argument type mismatch: actual type is 'kotlin.Unit'` and `Classifier does not have a companion object`. Fixed by changing to `LibraryState.Loading()`.
+
+- **Build error: Missing return statement** (`MusicRepository.kt`):
+  The `queryMediaStore()` function body ending in a bare `songs` expression was not accepted as an implicit return by the Kotlin compiler in this context. Fixed by replacing with an explicit `return songs` statement, eliminating the `Missing return statement` compiler error.
+
+- **Edit Song Info saves nothing — no real-time reflection** (`MainViewModel.kt`):
+  The `updateSongMetadata()` function wrote to MediaStore in the background but only called `loadLibrary()` afterwards, which re-queries MediaStore. On Android 10+ MediaStore writes for audio files require `MANAGE_MEDIA` or system permission and silently fail, so the reload returned the old data and the UI never updated. Fixed by immediately mutating the in-memory `_allSongs`, `_albums`, `_artists`, and `_libraryState` StateFlows with the updated values before any disk I/O, so all screens reflect changes the instant Save is tapped. The MediaStore/disk persist still runs in the background for persistence. Also invalidates Coil's memory cache for both old and new album art URIs, and updates `MusicService.currentSong` if the edited song is currently playing.
+
+#### New Features
+
+- **Bass Monster EQ preset** (`Constants.kt`, `EqualizerScreen.kt`):
+  Added a new "Bass Monster" stereo equaliser preset engineered for maximum sub-bass and mid-bass impact on any speaker or sound system. 5-band values: `+12.0 dB / +9.0 dB / +5.0 dB / +0.5 dB / −3.0 dB`. 10-band studio representation: `+12 / +11 / +9 / +6 / +2 / −1 / −2 / −3 / −3 / −3 dB`. The extreme low-end shelf combined with a tapered mid rolloff delivers chest-thumping, speaker-shaking bass without muddying the mix.
+
+- **Version** bumped to `2.2.5_stable` (versionCode 20).
+
+---
 
 ### v2.2.4_stable
 
