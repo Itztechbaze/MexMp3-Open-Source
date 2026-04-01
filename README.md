@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.5__stable-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.6__stable-blue"/>
 </p>
 
 ---
@@ -450,6 +450,28 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.6_stable
+
+#### New Features
+
+- **Check for Updates** (`MainViewModel.kt`, `SettingsScreen.kt`):
+  Added a "Check for Updates" card in Settings → About. Tapping it calls the GitHub Releases API, compares the latest release tag against the current app version, and shows a sleek update dialog if a newer APK release is available. The dialog shows a scrollable changelog capped at 200dp. The download button opens the APK asset URL directly. A green dot badge appears on the card when an update is found. States: Idle → Checking (spinner) → Available / UpToDate / Error (tap to retry).
+
+#### Bug Fixes
+
+- **Bass Monster EQ sounds harsh / distorted** (`EqualizerScreen.kt`, `Constants.kt`):
+  The original values pushed 32 Hz and 64 Hz to absolute maximum (+12/+11 dB) simultaneously, causing inter-band clipping and a muddy, fatiguing output. Retuned to a musical sub-bass shelf curve: `+10.0 / +8.5 / +6.0 / +2.5 / −0.5 / −1.5 / −2.0 / −1.5 / −1.0 / −0.5 dB`. The sub-bass hits hard on any speaker, the mid-bass is warm and full, and the upper-mids roll off cleanly so the sound stays clear and pleasant at high volume.
+
+- **EQ presets selectable when EQ is turned off** (`EqualizerScreen.kt`):
+  `StudioPresetChip` used `.clickable(onClick = onClick)` unconditionally. Changed to `.clickable(enabled = eqEnabled, onClick = onClick)` so tapping a preset chip does nothing when the EQ power button is off. Chips still render with their dimmed disabled style as before — now the interaction is also blocked.
+
+- **Edit Song Info — album cover does not update on Android 12 (Vivo Y20)** (`MainViewModel.kt`, `Models.kt`):
+  Android 12 (API 31) fully blocks writes to `content://media/external/audio/albumart` and the MediaStore thumbnail table. Previous implementation silently failed on all API 31+ devices. Fixed by saving the picked image to a private app cache file (`cacheDir/album_art/albumart_<albumId>.jpg`) which requires zero permissions on all API levels. Added `cachedArtPath: String?` field to the `Song` data class. Updated `albumArtUri()` to return a `file://` URI pointing at the cache file when one exists, falling back to the MediaStore URI otherwise. Coil loads the local file directly, bypassing the stale MediaStore cache entirely. Both Coil memory cache and disk cache entries are invalidated for old and new URIs so the new art appears the instant Save is tapped. Also writes `folder.jpg` next to the audio file as a best-effort for external players.
+
+- **Version** bumped to `2.2.6_stable` (versionCode 21).
+
+---
 
 ### v2.2.5_stable
 
