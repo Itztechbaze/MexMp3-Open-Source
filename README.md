@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.6__stable-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.7__stable-blue"/>
 </p>
 
 ---
@@ -450,6 +450,32 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.7_stable
+
+#### Bug Fixes
+
+- **Settings Rescan uses slow scan instead of fast scan** (`SettingsScreen.kt`):
+  The Rescan Library button in Settings was calling `vm.scanLibrary()` (full filesystem MediaScanner walk) instead of `vm.loadLibrary()` (fast MediaStore query). Changed to `loadLibrary()` so it matches the speed of the scan that runs on app launch.
+
+- **Deleting a song jumps back to the top of the list** (`MainViewModel.kt`, `SongsScreen.kt`, `MainActivity.kt`):
+  After a delete, the app was calling `loadLibrary()` which resets `LibraryState` to `Loading`, causing the `LazyColumn` to remount and scroll to position 0. Fixed by removing the deleted song directly from in-memory state (`_allSongs`, `_libraryState`) without triggering a full reload. `SongsScreen` now detects a count decrease and restores the exact first-visible-item index and scroll offset.
+
+- **Songs list has no scrollbar for fast navigation** (`SongsScreen.kt`):
+  Added an alphabetical fast-scroll index bar on the right edge of the songs list when sorted A–Z. Each letter shown maps to the first song starting with that letter. Tap or drag along the bar to jump instantly to any letter section.
+
+- **Editing song info does not reflect in Now Playing screen** (`NowPlayingScreen.kt`):
+  `NowPlayingScreen` was reading from `MusicService.currentSong` — a stale object set at playback time that doesn't update when metadata is edited. Fixed by also observing `vm.allSongs` and resolving the freshest copy of the current song by ID. The Now Playing title, artist, album, and artwork now update the instant Save is tapped in the editor.
+
+- **"Recent" tab shows played songs instead of newly added songs** (`FoldersAndRecentScreen.kt`, `strings.xml`, `MainActivity.kt`):
+  Renamed the tab from "Recent" to "Just Added" and changed its icon to `NewReleases`. The screen now shows songs sorted by `dateAdded` descending (newest files on device first) rather than play history, which is what a "recently added" section should show.
+
+- **Play Next and Add to Queue do nothing** (`MusicService.kt`, `MainViewModel.kt`, `MainActivity.kt`):
+  Both `playNext()` and `addToQueue()` only modified the queue list but never triggered playback — so when the queue was empty (nothing playing), calling either would silently insert into an inactive queue with no effect. Fixed by detecting an empty queue and calling `playQueue()` immediately in that case. Also added snackbar confirmation so the user gets visual feedback that the action succeeded.
+
+- **Version** bumped to `2.2.7_stable` (versionCode 22).
+
+---
 
 ### v2.2.6_stable
 
