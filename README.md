@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.7__stable-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.8__stable-blue"/>
 </p>
 
 ---
@@ -450,6 +450,21 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v2.2.8_stable
+
+#### Improvements
+
+- **Lyrics screen completely revamped** (`NowPlayingScreen.kt`):
+  The hidden collapsible card approach has been replaced with a full **swipeable dual-pane layout** using `HorizontalPager`. The Now Playing screen now has two pages — swipe left or tap the Lyrics icon to go to a dedicated full-screen lyrics view, swipe right to return to the player. Page indicator dots in the top bar show which pane you're on.
+  The new lyrics page features: blurred album art as a full-screen background with a dark scrim for readability; large center-aligned karaoke-style text with the active line highlighted in the theme accent colour and scaled up; past lines fade to 30% opacity; future lines sit at 55%. Synced lyrics auto-scroll smoothly line by line. A SYNCED badge appears when timestamped lyrics are available. Plain lyrics display in a clean scrollable center-aligned layout. A "no lyrics" state shows a helpful message with the album art blur background. Song title and artist are pinned at the bottom of the lyrics page.
+
+- **Deprecated `allowScanningByMediaScanner()` warning removed** (`SettingsScreen.kt`):
+  The deprecated API call was removed from the DownloadManager APK download request. The APK is still downloaded correctly to the Downloads folder and triggers the system install prompt via the completion notification.
+
+- **Version** bumped to `2.2.8_stable` (versionCode 23).
+
+---
 
 ### v2.2.7_stable
 
