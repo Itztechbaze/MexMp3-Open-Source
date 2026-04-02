@@ -15,7 +15,7 @@
   <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
   <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
   <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.8__stable-blue"/>
+  <img src="https://img.shields.io/badge/version-2.2.8b__stable-blue"/>
 </p>
 
 ---
@@ -451,18 +451,26 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 
 ## Changelog
 
-### v2.2.8_stable
+### v2.2.8b_stable
+
+#### Bug Fixes
+
+- **Synced lyrics not tracking the song in real time** (`NowPlayingScreen.kt`, `MusicService.kt`):
+  Three bugs were causing lyrics to fall out of sync. (1) `activeIndex` was computed inside `remember(state) { derivedStateOf { } }` — keying on `state` meant the block only ran when lyrics loaded, never when `positionMs` ticked forward, so the highlighted line never moved. Fixed by reading `positionMs` directly inside `derivedStateOf` so Compose tracks it as a reactive dependency and recomputes on every position update. Linear scan replaced with binary search for correctness. (2) The position updater in `MusicService` polled ExoPlayer every 500 ms — causing up to a half-second of visible lag between the audio and the highlighted line. Reduced to 100 ms, matching Spotify's polling cadence. (3) Auto-scroll used incorrect pixel math that caused jumpy movement. Replaced with `animateScrollToItem(activeIndex - 3)` so the active line stays smoothly centred on screen with context lines visible above and below.
 
 #### Improvements
 
 - **Lyrics screen completely revamped** (`NowPlayingScreen.kt`):
   The hidden collapsible card approach has been replaced with a full **swipeable dual-pane layout** using `HorizontalPager`. The Now Playing screen now has two pages — swipe left or tap the Lyrics icon to go to a dedicated full-screen lyrics view, swipe right to return to the player. Page indicator dots in the top bar show which pane you're on.
-  The new lyrics page features: blurred album art as a full-screen background with a dark scrim for readability; large center-aligned karaoke-style text with the active line highlighted in the theme accent colour and scaled up; past lines fade to 30% opacity; future lines sit at 55%. Synced lyrics auto-scroll smoothly line by line. A SYNCED badge appears when timestamped lyrics are available. Plain lyrics display in a clean scrollable center-aligned layout. A "no lyrics" state shows a helpful message with the album art blur background. Song title and artist are pinned at the bottom of the lyrics page.
+  The new lyrics page features: blurred album art as a full-screen background with a dark scrim for readability; large centre-aligned karaoke-style text with the active line highlighted in the theme accent colour and scaled up; past lines fade to 30% opacity; future lines sit at 55%. Synced lyrics auto-scroll smoothly line by line. A SYNCED badge appears when timestamped lyrics are available. Plain lyrics display in a clean scrollable centre-aligned layout. Song title and artist are pinned at the bottom of the lyrics page.
 
 - **Deprecated `allowScanningByMediaScanner()` warning removed** (`SettingsScreen.kt`):
-  The deprecated API call was removed from the DownloadManager APK download request. The APK is still downloaded correctly to the Downloads folder and triggers the system install prompt via the completion notification.
+  Removed the deprecated API call from the DownloadManager APK download request. Download and install flow is unaffected.
 
-- **Version** bumped to `2.2.8_stable` (versionCode 23).
+- **Equalizer quick-access button on Now Playing** (`NowPlayingScreen.kt`):
+  Added a pill-shaped EQ shortcut button below the playback controls on the player page. When EQ is off it shows "Equalizer" in a muted style. When EQ is on it lights up in the theme accent colour, displays the active preset name (e.g. "EQ · Bass Boost"), and shows a small dot indicator. Tapping it opens the full equalizer overlay directly on the Now Playing screen — no need to go through Settings.
+
+- **Version** bumped to `2.2.8b_stable` (versionCode 24).
 
 ---
 
