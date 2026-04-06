@@ -11,11 +11,11 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Android-API%2026%2B-green?logo=android"/>
-  <img src="https://img.shields.io/badge/Kotlin-2.1.0-blue?logo=kotlin"/>
-  <img src="https://img.shields.io/badge/Compose-BOM%202026.02.01-brightgreen"/>
-  <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.6.0-orange"/>
-  <img src="https://img.shields.io/badge/AGP-8.9.0-lightgrey"/>
-  <img src="https://img.shields.io/badge/version-2.2.8b__stable-blue"/>
+  <img src="https://img.shields.io/badge/Kotlin-2.1.10-blue?logo=kotlin"/>
+  <img src="https://img.shields.io/badge/Compose-BOM%202026.04.01-brightgreen"/>
+  <img src="https://img.shields.io/badge/ExoPlayer-Media3%201.7.1-orange"/>
+  <img src="https://img.shields.io/badge/AGP-8.9.2-lightgrey"/>
+  <img src="https://img.shields.io/badge/version-3.0.0-blue"/>
 </p>
 
 ---
@@ -63,7 +63,7 @@
 | **Arc/knob quick-adjust dials (Bass, Low Mid, Treble)** | ✅ |
 | **Pill-shaped band thumbs with glow shadow** | ✅ |
 | **Power toggle button with pulse glow** | ✅ |
-| **10 EQ presets + fully functional Custom mode** | ✅ |
+| **21 EQ presets + fully functional Custom mode** | ✅ |
 | Sleep timer | ✅ |
 | Shuffle (true random; restores sequential order when turned off) | ✅ |
 | App logo shown in vinyl disc centre on Now Playing (counter-rotates to stay upright) | ✅ |
@@ -71,7 +71,7 @@
 | Rescan Library triggers MediaScannerConnection filesystem scan | ✅ |
 | Repeat (none / all / one) — fully functional, ExoPlayer synced | ✅ |
 | Song list sort: Title A–Z / Recently Added / Most Played | ✅ |
-| **12 bespoke ultra-sleek app themes** | ✅ |
+| **17 bespoke ultra-sleek app themes** | ✅ |
 | Visual swatch grid theme picker | ✅ |
 | Playlist CRUD (Room DB) | ✅ |
 | Songs / Albums / Artists / Playlists / Folders / Recent screens | ✅ |
@@ -171,7 +171,7 @@ MexMp3v2/
 │       │   │   │   ├── SongOptionsSheet.kt
 │       │   │   │   └── MetadataEditorSheet.kt
 │       │   │   ├── theme/
-│       │   │   │   ├── Theme.kt         ← 12 ColorSchemes + MexMp3Theme()
+│       │   │   │   ├── Theme.kt         ← 17 ColorSchemes + MexMp3Theme()
 │       │   │   │   └── Typography.kt
 │       │   │   └── viewmodel/
 │       │   │       └── MainViewModel.kt
@@ -202,28 +202,28 @@ MexMp3v2/
 
 | Library | Version | Purpose |
 |---|---|---|
-| Kotlin | 2.1.0 | Language |
-| KSP | 2.1.0-1.0.29 | Annotation processing (replaces kapt) |
-| Jetpack Compose BOM | 2026.02.01 | UI framework |
+| Kotlin | 2.1.10 | Language |
+| KSP | 2.1.10-1.0.31 | Annotation processing (replaces kapt) |
+| Jetpack Compose BOM | 2026.04.01 | UI framework |
 | Material 3 | via BOM | Design system |
-| AndroidX Navigation Compose | 2.8.9 | Screen navigation |
-| Media3 ExoPlayer | 1.6.0 | Audio playback |
-| Media3 Session | 1.6.0 | MediaSession / lock screen |
+| AndroidX Navigation Compose | 2.9.0 | Screen navigation |
+| Media3 ExoPlayer | 1.7.1 | Audio playback |
+| Media3 Session | 1.7.1 | MediaSession / lock screen |
 | androidx.media | 1.7.0 | MediaStyle notification |
 | Coil Compose | 2.7.0 | Album art image loading |
-| Room | 2.6.1 | Playlist + recent play DB |
-| DataStore Preferences | 1.1.3 | Settings persistence |
-| Firebase BOM | 33.9.0 | Analytics + Crashlytics |
+| Room | 2.7.1 | Playlist + recent play DB |
+| DataStore Preferences | 1.1.7 | Settings persistence |
+| Firebase BOM | 33.14.0 | Analytics + Crashlytics |
 | AndroidX SplashScreen | 1.0.1 | Splash screen API |
-| Lifecycle ViewModel Compose | 2.8.7 | ViewModel + Compose integration |
-| Gson | 2.11.0 | JSON serialisation (queue) |
+| Lifecycle ViewModel Compose | 2.9.1 | ViewModel + Compose integration |
+| Gson | 2.12.1 | JSON serialisation (queue) |
 | LRCLib REST API | — | Free lyrics (no key required) |
 
 **Build toolchain:**
 
 | Tool | Version |
 |---|---|
-| Android Gradle Plugin | 8.9.0 |
+| Android Gradle Plugin | 8.9.2 |
 | Gradle Wrapper | 8.11.1 (Codemagic) / 9.4.0 (local) |
 | compileSdk / targetSdk | 36 |
 | minSdk | 26 (Android 8.0) |
@@ -310,9 +310,9 @@ base64 -w 0 mexmp3keypro.jks
 
 ```
 Splash Screen
-    └── Onboarding  (first launch — animated logo, feature cards, CTA buttons)
+    └── Onboarding  (3-page HorizontalPager — animated waveform, orbit rings, gradient wordmark, CTA)
          └── Main App
-               ├── Bottom Navigation
+               ├── Floating Pill Bottom Navigation (icon-only, glow indicator, spring-animated)
                │     ├── Songs  (sort: Title A-Z / Recently Added / Most Played)
                │     ├── Albums
                │     ├── Artists
@@ -321,7 +321,7 @@ Splash Screen
                │     └── Recent  (recently played from DB history)
                ├── Search  (top bar)
                ├── Settings  (top bar)
-               │     ├── Theme Picker  (12-swatch visual grid)
+               │     ├── Theme Picker  (17-swatch visual grid)
                │     ├── Equalizer  (Studio Mastering 10-band, JBL Stereo, Custom fully tunable)
                │     ├── Crossfade  (0–12 seconds slider)
                │     ├── Gapless Playback toggle
@@ -342,7 +342,7 @@ Splash Screen
 
 ## Theming System
 
-12 complete Material 3 dark colour schemes. Themes switch **instantly** at runtime — no restart needed.
+17 complete Material 3 dark colour schemes. Themes switch **instantly** at runtime — no restart needed.
 
 | Key | Name | Primary | Secondary | Vibe |
 |---|---|---|---|---|
@@ -358,6 +358,11 @@ Splash Screen
 | `PhantomNoir` | Phantom Noir | `#E0E0E0` | `#9E9E9E` | Platinum on oil-slick black |
 | `CosmicDusk` | Cosmic Dusk | `#7C4DFF` | `#CE93D8` | Deep indigo + soft lavender |
 | `JungleShadow` | Jungle Shadow | `#00695C` | `#CDDC39` | Dark teal + electric lime |
+| `ObsidianEmber` | Obsidian Ember | `#FF6D00` | `#FFAB40` | Molten orange on scorched black |
+| `SapphireNoir` | Sapphire Noir | `#1E88E5` | `#D4AF37` | Midnight navy + antique gold |
+| `TitaniumRose` | Titanium Rose | `#E8A0A8` | `#C0C8D0` | Gunmetal dark + rose-gold |
+| `VoidGreen` | Void Green | `#00E676` | `#69F0AE` | Absolute black + matrix neon |
+| `StellarBronze` | Stellar Bronze | `#CD7F32` | `#B8860B` | Deep space black + antique bronze |
 
 The picker shows a 2-column gradient swatch grid with a checkmark on the active theme.
 
@@ -399,6 +404,13 @@ A **10-band professional equalizer** with a bespoke studio mastering UI — buil
 | **Studio** | +300 | +200 | +100 | −50 | −100 | 0 | +100 | +200 | +300 | +400 |
 | **Mastering** | +200 | +150 | +50 | −50 | −100 | −100 | +50 | +150 | +250 | +350 |
 | **JBL Stereo** | +800 | +700 | +400 | +100 | −100 | +100 | +300 | +500 | +600 | +700 |
+| Bass Monster | +1000 | +850 | +600 | +250 | −50 | −150 | −200 | −150 | −100 | −50 |
+| **Spatial Wide** | −100 | 0 | +100 | +200 | +300 | +400 | +500 | +600 | +500 | +400 |
+| **Afrobeats** | +900 | +700 | +400 | 0 | −100 | 0 | +150 | +300 | +500 | +700 |
+| **Midnight R&B** | +600 | +500 | +300 | +100 | 0 | +100 | +200 | +150 | +100 | +50 |
+| **Concert Hall** | +300 | +200 | −100 | −200 | 0 | +100 | +200 | +300 | +400 | +500 |
+| **Punchy Club** | +1000 | +800 | +500 | −100 | −300 | −200 | +100 | +300 | +500 | +600 |
+| **Crystal Clear** | +100 | +50 | 0 | −50 | 0 | +100 | +200 | +300 | +350 | +400 |
 | Custom | user | user | user | user | user | user | user | user | user | user |
 
 The **Custom** preset preserves whatever band positions you drag to — selecting it does not reset values to zero. 10-band values are averaged pairwise to 5-band when passed to the Android `audiofx.Equalizer` API for full hardware compatibility.
@@ -450,6 +462,75 @@ All dangerous permissions use runtime requests with rationale dialogs. Battery o
 ---
 
 ## Changelog
+
+### v3.0.0
+
+#### New Features
+
+- **Floating Pill Bottom Navigation** (`MainActivity.kt`):
+  Completely replaced the standard Material 3 `NavigationBar` with a bespoke floating capsule bar. Shadow-elevated pill shape with a sweep-gradient border, icon-only navigation (no labels), animated expanding dot indicator that grows into a gradient pill on the selected tab, circular glow blob behind the active icon, spring-animated icon scale-up on selection. All six tabs rendered with `animateColorAsState` and `animateFloatAsState` transitions.
+
+- **Cinematic 3-Page Onboarding** (`OnboardingScreen.kt`):
+  Completely redesigned. Replaced the single scrollable column with a `HorizontalPager` presenting three swipeable pages. Each page has a numbered pill badge, bold headline, subtitle, and animated feature rows. Hero zone features spinning dashed orbit rings, pulsing radial glow, and animated waveform arc bars drawn with Canvas. Wordmark uses `Brush.horizontalGradient` on the MEX portion. CTA button morphs from "Continue →" to "Scan My Music" on the final page.
+
+- **New App Icon** (all `mipmap-*/` densities):
+  Brand-new waveform-M icon: stylised letter M formed from equalizer bars with an olive-green (`#4B5320`) to burnt-orange (`#CC5500`) gradient on a deep matte black circle. Regenerated for all five density buckets — mdpi (48 dp), hdpi (72 dp), xhdpi (96 dp), xxhdpi (144 dp), xxxhdpi (192 dp) — including `ic_launcher.png`, `ic_launcher_round.png`, and `ic_launcher_foreground.png`.
+
+- **Gradient Top Bar Wordmark** (`MainActivity.kt`):
+  Plain `Text("MexMp3")` replaced with a split two-part wordmark. "MEX" in `FontWeight.Black` at 28 sp with 3 sp letter-spacing and a horizontal three-stop gradient (`#8BAF47` → `#E8640A` → `#CC5500`) via `TextStyle(brush = ...)`. "Mp3" in `FontWeight.Thin` at 15 sp with 38% opacity.
+
+- **5 New Themes** (`Theme.kt`, `Constants.kt`, `SettingsScreen.kt`) — theme count now **17**:
+
+  | Key | Name | Primary | Secondary | Vibe |
+  |---|---|---|---|---|
+  | `ObsidianEmber` | Obsidian Ember | `#FF6D00` | `#FFAB40` | Molten orange on scorched black |
+  | `SapphireNoir` | Sapphire Noir | `#1E88E5` | `#D4AF37` | Midnight navy + antique gold |
+  | `TitaniumRose` | Titanium Rose | `#E8A0A8` | `#C0C8D0` | Gunmetal dark + rose-gold |
+  | `VoidGreen` | Void Green | `#00E676` | `#69F0AE` | Absolute black + matrix neon |
+  | `StellarBronze` | Stellar Bronze | `#CD7F32` | `#B8860B` | Deep space black + antique bronze |
+
+- **6 New EQ Presets** (`EqualizerScreen.kt`, `Constants.kt`) — preset count now **21**:
+
+  | Preset | Character |
+  |---|---|
+  | Spatial Wide | Withdrawn sub, rising presence + air — opens the stereo field wide |
+  | Afrobeats | Heavy 32–125 Hz sub shelf, tight mids, sparkling 8–16 kHz presence |
+  | Midnight R&B | Warm sub-bass, velvety mids, silky smooth top end |
+  | Concert Hall | Lifted lows, scooped low-mids, open upper-room air |
+  | Punchy Club | Massive sub, deeply scooped 500 Hz mud, sizzling highs |
+  | Crystal Clear | Gentle upper-mid and air lift for reference-grade detail |
+
+#### Bug Fixes
+
+- **App crash on delete on OEM ROMs** (`MainActivity.kt`): `MediaStore.createDeleteRequest()` wrapped in `runCatching` — falls back to direct `vm.deleteSong()` when OEM devices throw `IllegalArgumentException` for large media IDs.
+
+- **Metadata editor changes not persisting** (`Entities.kt`, `AppDatabase.kt`, `MusicRepository.kt`, `MainViewModel.kt`): Added `SongMetadataOverrideEntity` Room table (DB version bumped to 2). Overrides upserted on every save and re-applied on top of MediaStore data on every app launch — edits survive restarts permanently.
+
+- **Hardcoded version strings not updated** (`SettingsScreen.kt`, `NowPlayingScreen.kt`, `MainViewModel.kt`): Three strings still referencing `2.2.8b_stable` after the build.gradle bump. All corrected to `3.0.0`.
+
+- **Deprecated Firebase `-ktx` artifacts** (`build.gradle.kts`): `firebase-analytics-ktx` and `firebase-crashlytics-ktx` replaced with `firebase-analytics` and `firebase-crashlytics` — eliminates deprecation build warnings introduced in Firebase BOM 33.x.
+
+#### Dependencies Updated
+
+| Library | From | To |
+|---|---|---|
+| AGP | 8.9.0 | 8.9.2 |
+| Kotlin | 2.1.0 | 2.1.10 |
+| KSP | 2.1.0-1.0.29 | 2.1.10-1.0.31 |
+| Compose BOM | 2026.02.01 | 2026.04.01 |
+| Navigation Compose | 2.8.9 | 2.9.0 |
+| Lifecycle | 2.8.7 | 2.9.1 |
+| Media3 ExoPlayer/Session/UI | 1.6.0 | 1.7.1 |
+| Room | 2.6.1 | 2.7.1 |
+| DataStore Preferences | 1.1.3 | 1.1.7 |
+| Firebase BOM | 33.9.0 | 33.14.0 |
+| Core KTX | 1.15.0 | 1.16.0 |
+| Gson | 2.11.0 | 2.12.1 |
+
+- `versionCode` bumped from 24 → 30
+- `versionName` bumped from `2.2.8b_stable` → `3.0.0`
+
+---
 
 ### v2.2.8b_stable
 
